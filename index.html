@@ -35,6 +35,8 @@
         const width = canvas.width = window.innerWidth;
         const height = canvas.height = window.innerHeight;
 
+        var scale = 1
+
         function random(min, max) {
             const num = (Math.random() * (max - min)) + min;
             return num;
@@ -60,9 +62,14 @@
         Ball.prototype.draw = function () {
             ctx.beginPath();
             ctx.fillStyle = this.color;
-            x = width / 2 + this.r * Math.sin(this.theta);
-            y = height / 2 + this.r * Math.cos(this.theta);
-            ctx.arc(x, y, this.size, 0, 2 * Math.PI);
+            x = this.r * Math.sin(this.theta);
+            y = this.r * Math.cos(this.theta);
+            x *= scale;
+            y *= scale;
+            x += width / 2 ;
+            y += height / 2 ;
+            size = this.size * scale;
+            ctx.arc(x, y, size, 0, 2 * Math.PI);
             ctx.fill();
         };
 
@@ -97,6 +104,7 @@
             );
             balls.push(ball);
         }
+        //balls.push(new Ball( 0, 0, 0, randomColor(), 100));
 
         function loop() {
             ctx.fillStyle = 'rgba(0,0,0,0.25)';
@@ -113,6 +121,21 @@
 
         loop();
         console.log(random(0, 2 * Math.PI));
+
+
+        // 添加鼠标滚轮事件监听器
+        canvas.addEventListener("wheel", function(event) {
+          event.preventDefault(); // 阻止默认滚动行为
+
+          // 检查滚轮的方向，并根据需要执行操作
+          if (event.deltaY < 0) {
+            scale *= 1.1;
+          } else if (event.deltaY > 0) {
+            scale *= 0.9
+            console.log("向下滚动", event.deltaY);
+            // 执行向下滚动的操作
+          }
+        });
     </script>
 </body>
 
