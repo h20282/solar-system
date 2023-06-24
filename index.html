@@ -35,7 +35,7 @@
         const width = canvas.width = window.innerWidth;
         const height = canvas.height = window.innerHeight;
 
-        var scale = 1
+        var scale = 0.04
 
         function random(min, max) {
             const num = (Math.random() * (max - min)) + min;
@@ -69,8 +69,21 @@
             x += width / 2 ;
             y += height / 2 ;
             size = this.size * scale;
+            min_size = 1
+            if (size < min_size) {
+                size = min_size;
+            }
+
             ctx.arc(x, y, size, 0, 2 * Math.PI);
             ctx.fill();
+            ctx.closePath();
+
+            ctx.beginPath();
+            ctx.arc(width/2, height/2, this.r*scale, 0, 2 * Math.PI);
+            ctx.strokeStyle="white";
+            ctx.lineWidth=0.1;
+            ctx.stroke();
+            ctx.closePath();
         };
 
         Ball.prototype.update = function () {
@@ -93,18 +106,18 @@
 
         let balls = [];
 
-        while (balls.length < 20) {
-            const size = random(1, 20);
-            let ball = new Ball(
-                random(0, height * 0.5),
-                random(0, 2 * Math.PI),
-                random(-Math.PI*0.01, Math.PI*0.01),
-                randomColor(),
-                size
-            );
-            balls.push(ball);
-        }
-        //balls.push(new Ball( 0, 0, 0, randomColor(), 100));
+        const AU = 14959.7871;
+                    // Ball(r, theta, v, color, size)
+        balls.push(new Ball(0, 0, 0, randomColor(), 69));
+        balls.push(new Ball(0.3871*AU, 0, 1/87.97, randomColor(), 0.2440));
+        balls.push(new Ball(0.7233*AU, 0, 1/225, randomColor(), 0.6052));
+        balls.push(new Ball(1.0000*AU, 0, 1/365.26, randomColor(), 0.6378));
+        balls.push(new Ball(1.5237*AU, 0, 1/687, randomColor(), 0.3397));
+        balls.push(new Ball(5.2026*AU, 0, 1/11.86/365, randomColor(), 7.1492));
+        balls.push(new Ball(9.5549*AU, 0, 1/29.46/365, randomColor(), 6.0268));
+        balls.push(new Ball(19.2184*AU, 0, 1/84.01/365, randomColor(), 2.5559));
+        balls.push(new Ball(30.1104*AU, 0, 1/164.82/365, randomColor(), 2.4764));
+
 
         function loop() {
             ctx.fillStyle = 'rgba(0,0,0,0.25)';
@@ -132,9 +145,8 @@
             scale *= 1.1;
           } else if (event.deltaY > 0) {
             scale *= 0.9
-            console.log("向下滚动", event.deltaY);
-            // 执行向下滚动的操作
           }
+          console.log("scale: " + scale);
         });
     </script>
 </body>
